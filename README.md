@@ -1,1 +1,1 @@
-![Build status](https://github.com/quixoticmonk/aws-cdk/workflows/Build/badge.svg "GitHub Actions Build Status")
+![Build status](https://github.com/quixoticmonk/cdk-urlshortener/workflows/Build/badge.svg "GitHub Actions Build Status")

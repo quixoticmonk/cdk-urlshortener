@@ -25,7 +25,7 @@ def generate_id():
     return "".join(_return_value[::-1])
 
 
-def handler(event):
+def handler(event, context):
     print(event)
     _long_url = event.get('body').get('long_url')
     _short_id = generate_id()

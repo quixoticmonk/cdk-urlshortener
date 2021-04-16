@@ -27,7 +27,7 @@ def generate_id():
 
 def handler(event):
     print(event)
-    _long_url = json.loads(event.get('body')).get('long_url')
+    _long_url = event.get('body').get('long_url')
     _short_id = generate_id()
     _short_url = domain_url + _short_id
     _timestamp = strftime("%Y-%m-%dT%H:%M:%S")

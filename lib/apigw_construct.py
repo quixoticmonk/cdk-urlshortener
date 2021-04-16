@@ -44,21 +44,21 @@ class GatewayConstruct(core.Construct):
                 "stage_name": stage,
                 "access_log_destination": LogGroupLogDestination(api_log_group),
                 "access_log_format":
-                AccessLogFormat.json_with_standard_fields(caller=False,
-                                                          http_method=True,
-                                                          ip=True,
-                                                          protocol=True,
-                                                          request_time=True,
-                                                          resource_path=True,
-                                                          response_length=True,
-                                                          status=True,
-                                                          user=True),
+                    AccessLogFormat.json_with_standard_fields(caller=False,
+                                                              http_method=True,
+                                                              ip=True,
+                                                              protocol=True,
+                                                              request_time=True,
+                                                              resource_path=True,
+                                                              response_length=True,
+                                                              status=True,
+                                                              user=True),
                 "metrics_enabled": True,
             },
             endpoint_configuration={
                 "types": [
                     EndpointType.REGIONAL if gw["gw_endpoint_type"]
-                    == "regional" else EndpointType.EDGE
+                                             == "regional" else EndpointType.EDGE
                 ]
             },
             deploy=True,
@@ -82,28 +82,32 @@ class GatewayConstruct(core.Construct):
             passthrough_behavior=passthrough_behavior,
         )
 
-        gateway_root_resource = gateway.root.add_resource(
-            gw["gw_root_resource"])
+        _create_resource = gateway.root.add_resource("create")
 
-        _create_resource = gateway_root_resource.add_resource("create")
-
-        gateway_post_method = _create_resource.add_method(
-            gw["gw_method"],
+        _create_resource.add_method(
+            "POST",
             lambda_integration,
             api_key_required=False
         )
 
-        gateway_get_method = gateway_root_resource.add_method(
+        _retrieve_resource = gateway.root.add_resource("t")
+        _retrieve_resource.add_resource("{short_id}")
+
+        _retrieve_resource.add_method(
             "GET",
             lambda_integration_2,
             api_key_required=False
         )
 
-        gateway_root_resource.add_cors_preflight(
+        _create_resource.add_cors_preflight(
             allow_origins=[gw["gw_origins_cors"]],
             allow_methods=[gw["gw_origins_cors_method"]]
         )
 
+        _retrieve_resource.add_cors_preflight(
+            allow_origins=[gw["gw_origins_cors"]],
+            allow_methods=[gw["gw_origins_cors_method"]]
+        )
 
         # # Outputs
 

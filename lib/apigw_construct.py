@@ -17,7 +17,7 @@ LOG_RETENTION_PERIOD = _logs.RetentionDays.ONE_WEEK
 
 class GatewayConstruct(core.Construct):
     def __init__(self, scope: core.Construct, construct_id: str, stage: str,
-                 lambda_fn_alias: _lambda.IAlias, gw_context: str,
+                 lambda_fn_alias: _lambda.IAlias, lambda_fn_alias2: _lambda.IAlias, gw_context: str,
                  **kwargs) -> None:
         super().__init__(scope, construct_id)
 
@@ -38,16 +38,11 @@ class GatewayConstruct(core.Construct):
             gw["gw_name"],
             rest_api_name=gw["gw_name"],
             deploy_options={
-                "description":
-                gw["gw_stage_description"],
-                "logging_level":
-                LOG_INFO,
-                "tracing_enabled":
-                True,
-                "stage_name":
-                stage,
-                "access_log_destination":
-                LogGroupLogDestination(api_log_group),
+                "description": gw["gw_stage_description"],
+                "logging_level": LOG_INFO,
+                "tracing_enabled": True,
+                "stage_name": stage,
+                "access_log_destination": LogGroupLogDestination(api_log_group),
                 "access_log_format":
                 AccessLogFormat.json_with_standard_fields(caller=False,
                                                           http_method=True,
@@ -58,8 +53,7 @@ class GatewayConstruct(core.Construct):
                                                           response_length=True,
                                                           status=True,
                                                           user=True),
-                "metrics_enabled":
-                True,
+                "metrics_enabled": True,
             },
             endpoint_configuration={
                 "types": [
@@ -72,41 +66,6 @@ class GatewayConstruct(core.Construct):
             description=gw["gw_description"],
         )
 
-        # Response modesls are neded for a non-proxy integration
-        response_model = gateway.add_model(
-            gw["gw_response_model_name"],
-            content_type="application/json",
-            model_name=gw["gw_response_model_name"],
-            schema={
-                "schema": JsonSchemaVersion.DRAFT4,
-                "title": gw["gw_response_model_name"],
-                "type": JsonSchemaType.OBJECT,
-                "properties": {
-                    "message": {
-                        "type": JsonSchemaType.STRING
-                    }
-                }
-            })
-
-        error_response_model = gateway.add_model(
-            gw["gw_error_response_model_name"],
-            content_type="application/json",
-            model_name=gw["gw_error_response_model_name"],
-            schema={
-                "schema": JsonSchemaVersion.DRAFT4,
-                "title": gw["gw_error_response_model_name"],
-                "type": JsonSchemaType.OBJECT,
-                "properties": {
-                    "state": {
-                        "type": JsonSchemaType.STRING
-                    },
-                    "message": {
-                        "type": JsonSchemaType.STRING
-                    }
-                }
-            })
-
-        # Setting passthrough behavior
         pass_context = gw["gw_passthrough_behavior"]
 
         passthrough_behavior = PassthroughBehavior.WHEN_NO_TEMPLATES if pass_context == "WHEN_NO_TEMPLATES" else PassthroughBehavior.WHEN_NO_MATCH if pass_context == "WHEN_NO_MATCH" else PassthroughBehavior.NEVER
@@ -123,52 +82,22 @@ class GatewayConstruct(core.Construct):
         gateway_post_method = gateway_root_resource.add_method(
             gw["gw_method"],
             lambda_integration,
-            api_key_required=True,
-            method_responses=[
-                MethodResponse(
-                    status_code='200',
-                    response_models={'application/json': response_model}),
-                MethodResponse(
-                    status_code='400',
-                    response_models={'application/json':
-                                     error_response_model}),
-            ])
+            api_key_required=True
+        )
 
         gateway_root_resource.add_cors_preflight(
             allow_origins=[gw["gw_origins_cors"]],
-            allow_methods=[gw["gw_origins_cors_method"]])
-
-        gateway_post_key = gateway.add_api_key(
-            gw["gw_api_key_name"],
-            api_key_name=gw["gw_api_key_name"],
+            allow_methods=[gw["gw_origins_cors_method"]]
         )
 
-        api_key_usage_plan = gateway.add_usage_plan(
-            gw["gw_api_key_usage_plan_name"],
-            name=gw["gw_api_key_usage_plan_name"],
-            api_key=gateway_post_key,
-            throttle={
-                "rate_limit": gw["gw_api_key_usage_throttle"],
-                "burst_limit": gw["gw_api_key_usage_burst"],
-            },
-        )
 
-        api_key_usage_plan.add_api_stage(
-            stage=gateway.deployment_stage,
-            throttle=[{
-                "method": gateway_post_method,
-                "throttle": {
-                    "rate_limit": gw["gw_api_key_usage_throttle"],
-                    "burst_limit": gw["gw_api_key_usage_burst"],
-                }
-            }])
         # # Outputs
 
-        core.CfnOutput(self, "ApiGwUrl", value=(gateway.url))
+        core.CfnOutput(self, "ApiGwUrl", value=gateway.url)
 
         core.CfnOutput(self,
                        "ApiGWLogGroup",
-                       value=(api_log_group.log_group_name))
+                       value=api_log_group.log_group_name)
 
         self.apigw = gateway
 

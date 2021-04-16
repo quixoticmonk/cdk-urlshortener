@@ -14,7 +14,7 @@ class AppStack(cdk.Stack):
 
         _fn1 = LambdaConstruct(self, "createshortUrl", "lambda1")
         _fn2 = LambdaConstruct(self, "getUrl", "lambda2")
-        # GatewayConstruct()
+        GatewayConstruct(self, "urlshortenerGateway", "dev", _fn1.main_function_alias, _fn2.main_function_alias, "gw")
         _db = DbConstruct(self, "urltable", "db")
         AppConstruct(self, "appConstruct", _fn1.main_function,
                      _fn2.main_function, _db.main_table)

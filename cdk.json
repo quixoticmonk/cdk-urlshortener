@@ -41,6 +41,19 @@
          "db_enable_streams": false,
          "db_target_utilization": 70,
          "db_ttl_attribute": "ttl"
+      },
+      "gw": {
+         "gw_log_group_name": "urlshortenergwlogs",
+         "gw_endpoint_type": "regional",
+         "gw_name": "urlshortenergw",
+         "gw_stage_description": "Gateway stage for Url shortener service",
+         "gw_description": "Gateway for url shortener",
+         "gw_passthrough_behavior": "WHEN_NO_TEMPLATES",
+         "gw_root_resource": "api",
+         "gw_method": "POST",
+         "gw_origins_cors": "*",
+         "gw_origins_cors_method": "POST"
+
       }
    }
 }

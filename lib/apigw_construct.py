@@ -76,13 +76,25 @@ class GatewayConstruct(core.Construct):
             passthrough_behavior=passthrough_behavior,
         )
 
+        lambda_integration_2 = _api_gw.LambdaIntegration(
+            lambda_fn_alias2,
+            proxy=False,
+            passthrough_behavior=passthrough_behavior,
+        )
+
         gateway_root_resource = gateway.root.add_resource(
             gw["gw_root_resource"])
 
         gateway_post_method = gateway_root_resource.add_method(
             gw["gw_method"],
             lambda_integration,
-            api_key_required=True
+            api_key_required=False
+        )
+
+        gateway_get_method = gateway_root_resource.add_method(
+            "GET",
+            lambda_integration_2,
+            api_key_required=False
         )
 
         gateway_root_resource.add_cors_preflight(

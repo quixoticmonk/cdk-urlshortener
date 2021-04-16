@@ -85,7 +85,9 @@ class GatewayConstruct(core.Construct):
         gateway_root_resource = gateway.root.add_resource(
             gw["gw_root_resource"])
 
-        gateway_post_method = gateway_root_resource.add_method(
+        _create_resource = gateway_root_resource.add_resource("create")
+
+        gateway_post_method = _create_resource.add_method(
             gw["gw_method"],
             lambda_integration,
             api_key_required=False

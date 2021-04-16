@@ -1,32 +1,45 @@
 {
-  "app": "python3 app.py",
-  "context": {
-    "@aws-cdk/core:enableStackNameDuplicates": "true",
-    "aws-cdk:enableDiffNoFail": "true",
-    "@aws-cdk/core:stackRelativeExports": "true",
-    "@aws-cdk/aws-ecr-assets:dockerIgnoreSupport": true,
-    "@aws-cdk/aws-secretsmanager:parseOwnedSecretName": true,
-    "@aws-cdk/aws-kms:defaultKeyPolicies": true,
-    "@aws-cdk/aws-s3:grantWriteWithoutAcl": true
-  },
-  "lambda1": {
-    "fn_runtime": "PYTHON_3_8",
-    "fn_reserved_concurrency": 100,
-    "fn_timeout": 10,
-    "fn_path": "src/create",
-    "fn_handler": "index.handler",
-    "fn_name": "createshorturlFn",
-    "fn_alias": "live",
-    "fn_retry_attempts": 2
-  },
-  "lambda2": {
-    "fn_runtime": "PYTHON_3_8",
-    "fn_reserved_concurrency": 100,
-    "fn_timeout": 10,
-    "fn_path": "src/retrieve",
-    "fn_handler": "index.handler",
-    "fn_name": "retrieveurlFn",
-    "fn_alias": "live",
-    "fn_retry_attempts": 2
-  }
+   "app":"python3 app.py",
+   "context":{
+      "@aws-cdk/core:enableStackNameDuplicates":"true",
+      "aws-cdk:enableDiffNoFail":"true",
+      "@aws-cdk/core:stackRelativeExports":"true",
+      "@aws-cdk/aws-ecr-assets:dockerIgnoreSupport":true,
+      "@aws-cdk/aws-secretsmanager:parseOwnedSecretName":true,
+      "@aws-cdk/aws-kms:defaultKeyPolicies":true,
+      "@aws-cdk/aws-s3:grantWriteWithoutAcl":true,
+      "lambda1":{
+         "fn_runtime":"PYTHON_3_8",
+         "fn_reserved_concurrency":100,
+         "fn_timeout":10,
+         "fn_path":"src/create",
+         "fn_handler":"index.handler",
+         "fn_name":"createshorturlFn",
+         "fn_alias":"live",
+         "fn_retry_attempts":2
+      },
+      "lambda2":{
+         "fn_runtime":"PYTHON_3_8",
+         "fn_reserved_concurrency":100,
+         "fn_timeout":10,
+         "fn_path":"src/retrieve",
+         "fn_handler":"index.handler",
+         "fn_name":"retrieveurlFn",
+         "fn_alias":"live",
+         "fn_retry_attempts":2
+      },
+      "db": {
+         "db_table": "url-table",
+         "db_table_pk": "short_id",
+         "db_table_pk_type": "string",
+         "db_billing_mode": "provisioned",
+         "db_enable_autoscaling": true,
+         "db_min_read_capacity": 1,
+         "db_max_read_capacity": 50,
+         "db_min_write_capacity": 1,
+         "db_max_write_capacity": 50,
+         "db_enable_streams": false,
+         "db_target_utilization": 70
+      }
+   }
 }

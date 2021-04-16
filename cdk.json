@@ -39,7 +39,8 @@
          "db_min_write_capacity": 1,
          "db_max_write_capacity": 50,
          "db_enable_streams": false,
-         "db_target_utilization": 70
+         "db_target_utilization": 70,
+         "db_ttl_attribute": "ttl"
       }
    }
 }

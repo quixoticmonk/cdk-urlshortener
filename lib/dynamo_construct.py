@@ -1,11 +1,11 @@
-from aws_cdk import (core, aws_dynamodb as _ddb)
+from aws_cdk import (core as cdk, aws_dynamodb as _ddb)
 
 from aws_cdk.aws_dynamodb import (BillingMode, Table, Attribute, AttributeType,
                                   ITable)
 
 
-class DbConstruct(core.Construct):
-    def __init__(self, scope: core.Construct, construct_id: str,
+class DbConstruct(cdk.Construct):
+    def __init__(self, scope: cdk.Construct, construct_id: str,
                  db_context: str, **kwargs) -> None:
         super().__init__(scope, construct_id)
 
@@ -28,8 +28,9 @@ class DbConstruct(core.Construct):
             write_capacity=db["db_min_write_capacity"],
             encryption=_ddb.TableEncryption.AWS_MANAGED,
             point_in_time_recovery=True,
-            removal_policy=core.RemovalPolicy.DESTROY,
+            removal_policy=cdk.RemovalPolicy.DESTROY,
             billing_mode=billing_mode,
+            time_to_live_attribute=db["db_ttl_attribute"],
         )
 
         # Add read/write autoscaling enabled at X% utilization

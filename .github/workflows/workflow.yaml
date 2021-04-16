@@ -1,0 +1,19 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+      - name: Install CDK and Gatsby
+        run: |
+          npm install -g aws-cdk@1.98.0
+      - name: Run CDK synth
+        run: |
+          cdk synth

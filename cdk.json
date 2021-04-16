@@ -8,5 +8,25 @@
     "@aws-cdk/aws-secretsmanager:parseOwnedSecretName": true,
     "@aws-cdk/aws-kms:defaultKeyPolicies": true,
     "@aws-cdk/aws-s3:grantWriteWithoutAcl": true
+  },
+  "lambda1": {
+    "fn_runtime": "PYTHON_3_8",
+    "fn_reserved_concurrency": 100,
+    "fn_timeout": 10,
+    "fn_path": "src/create",
+    "fn_handler": "index.handler",
+    "fn_name": "createshorturlFn",
+    "fn_alias": "live",
+    "fn_retry_attempts": 2
+  },
+  "lambda2": {
+    "fn_runtime": "PYTHON_3_8",
+    "fn_reserved_concurrency": 100,
+    "fn_timeout": 10,
+    "fn_path": "src/retrieve",
+    "fn_handler": "index.handler",
+    "fn_name": "retrieveurlFn",
+    "fn_alias": "live",
+    "fn_retry_attempts": 2
   }
 }

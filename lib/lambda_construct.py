@@ -1,4 +1,4 @@
-from aws_cdk import (core, aws_lambda as _lambda)
+from aws_cdk import (core as cdk, aws_lambda as _lambda)
 
 from aws_cdk.core import Duration
 
@@ -10,10 +10,10 @@ from aws_cdk.aws_lambda import (
 )
 
 
-class LambdaConstruct(core.Construct):
-    def __init__(self, scope: core.Construct, construct_id: str,
+class LambdaConstruct(cdk.Construct):
+    def __init__(self, scope: cdk.Construct, construct_id: str,
                  lambda_context: str, **kwargs) -> None:
-        super().__init__(scope, construct_id, **kwargs)
+        super().__init__(scope, construct_id)
 
         fn = dict(self.node.try_get_context(lambda_context))
 
@@ -26,12 +26,11 @@ class LambdaConstruct(core.Construct):
             code=Code.from_asset(fn["fn_path"]),
             tracing=Tracing.ACTIVE,
             current_version_options={
-                "removal_policy": core.RemovalPolicy.RETAIN
+                "removal_policy": cdk.RemovalPolicy.RETAIN
             },
             environment={
                 "ENVIRONMENT_VALUE": "DUMMY_VALUE",
             },
-            dead_letter_queue=lambda_fn_dlq,
             retry_attempts=fn["fn_retry_attempts"],
             timeout=Duration.seconds(fn["fn_timeout"]),
             reserved_concurrent_executions=fn["fn_reserved_concurrency"])
@@ -40,13 +39,12 @@ class LambdaConstruct(core.Construct):
 
         # # Outputs
 
-        core.CfnOutput(self,
-                       fn["fn_name"] + 'Arn',
-                       value=(lambda_fn.function_arn))
+        cdk.CfnOutput(self,
+                      fn["fn_name"] + 'Arn',
+                      value=lambda_fn.function_arn)
 
         self._function = lambda_fn
         self._function_alias = lambda_fn_alias
-        self._function_dlq = lambda_fn_dlq
 
     @property
     def main_function(self) -> _lambda.IFunction:

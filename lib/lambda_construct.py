@@ -47,7 +47,7 @@ class LambdaConstruct(cdk.Construct):
         self._function_alias = lambda_fn_alias
 
     @property
-    def main_function(self) -> _lambda.IFunction:
+    def main_function(self) -> _lambda.Function:
         return self._function
 
     @property

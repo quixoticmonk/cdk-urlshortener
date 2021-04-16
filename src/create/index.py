@@ -25,7 +25,7 @@ def generate_id():
     return "".join(_return_value[::-1])
 
 
-def lambda_handler(event):
+def handler(event):
     print(event)
     _long_url = json.loads(event.get('body')).get('long_url')
     _short_id = generate_id()

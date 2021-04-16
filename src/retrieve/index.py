@@ -6,7 +6,7 @@ table_name = os.getenv("TABLE_NAME")
 ddb = boto3.resource('dynamodb', region_name='us-east-1').Table(table_name)
 
 
-def lambda_handler(event):
+def handler(event):
     short_id = event.get('short_id')
 
     try:

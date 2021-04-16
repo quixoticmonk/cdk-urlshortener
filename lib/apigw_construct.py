@@ -90,8 +90,7 @@ class GatewayConstruct(core.Construct):
             api_key_required=False
         )
 
-        _retrieve_resource = gateway.root.add_resource("t")
-        _retrieve_resource.add_resource("{short_id}")
+        _retrieve_resource = gateway.root.add_resource("{short_id}")
 
         _retrieve_resource.add_method(
             "GET",

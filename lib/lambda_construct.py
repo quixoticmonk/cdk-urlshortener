@@ -1,4 +1,4 @@
-from aws_cdk import (core as cdk, aws_lambda as _lambda, aws_rds as rds)
+from aws_cdk import (core as cdk, aws_lambda as _lambda)
 
 from aws_cdk.core import Duration
 
@@ -16,8 +16,6 @@ class LambdaConstruct(cdk.Construct):
         super().__init__(scope, construct_id)
 
         fn = dict(self.node.try_get_context(lambda_context))
-
-        rds.DatabaseInstance.from_database_instance_attributes()
 
         lambda_fn = Function(
             self,

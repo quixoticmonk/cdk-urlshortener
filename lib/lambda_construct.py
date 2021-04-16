@@ -28,9 +28,6 @@ class LambdaConstruct(cdk.Construct):
             current_version_options={
                 "removal_policy": cdk.RemovalPolicy.RETAIN
             },
-            environment={
-                "ENVIRONMENT_VALUE": "DUMMY_VALUE",
-            },
             retry_attempts=fn["fn_retry_attempts"],
             timeout=Duration.seconds(fn["fn_timeout"]),
             reserved_concurrent_executions=fn["fn_reserved_concurrency"])

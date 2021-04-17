@@ -109,7 +109,7 @@ class GatewayConstruct(core.Construct):
             """
                     #set($inputRoot = $input.path('$'))
                     {
-                             "short_id" : $inputRoot.short_id    
+                             "short_id" : $inputRoot.body.short_id    
                     }
                     """
         )

@@ -66,9 +66,43 @@ class GatewayConstruct(core.Construct):
             description=gw["gw_description"],
         )
 
-        pass_context = gw["gw_passthrough_behavior"]
+        _post_response_model = gateway.add_model(
+            "CreateResponseModel",
+            content_type="application/json",
+            model_name="CreateResponseModel",
+            schema={
+                "schema": JsonSchemaVersion.DRAFT4,
+                "title": "CreateResponseModel",
+                "type": JsonSchemaType.OBJECT,
+                "properties": {
+                    "short_url": {
+                        "type": JsonSchemaType.STRING
+                    }
+                }
 
-        passthrough_behavior = PassthroughBehavior.WHEN_NO_TEMPLATES if pass_context == "WHEN_NO_TEMPLATES" else PassthroughBehavior.WHEN_NO_MATCH if pass_context == "WHEN_NO_MATCH" else PassthroughBehavior.NEVER
+            }
+        )
+
+        _get_response_model = gateway.add_model(
+            "RetrieveResponseModel",
+            model_name="RetrieveResponseModel",
+            schema={
+                "schema": JsonSchemaVersion.DRAFT4,
+                "title": "RetrieveResponseModel",
+                "type": JsonSchemaType.OBJECT,
+                "properties": {
+                    "long_url": {
+                        "type": JsonSchemaType.STRING
+                    },
+                    "status_code": {
+                        "type": JsonSchemaType.INTEGER
+                    }
+                }
+
+            }
+        )
+
+        passthrough_behavior = PassthroughBehavior.WHEN_NO_TEMPLATES
 
         lambda_integration = _api_gw.LambdaIntegration(
             lambda_fn_alias,
@@ -87,7 +121,16 @@ class GatewayConstruct(core.Construct):
         _create_resource.add_method(
             "POST",
             lambda_integration,
-            api_key_required=False
+            api_key_required=False,
+            method_responses=[
+                MethodResponse(
+                    status_code='200',
+                    response_models={'application/json': _post_response_model}
+                ),
+                MethodResponse(
+                    status_code='400'
+                )
+            ]
         )
 
         _retrieve_resource = gateway.root.add_resource("{short_id}")
@@ -95,7 +138,16 @@ class GatewayConstruct(core.Construct):
         _retrieve_resource.add_method(
             "GET",
             lambda_integration_2,
-            api_key_required=False
+            api_key_required=False,
+            method_responses=[
+                MethodResponse(
+                    status_code='301',
+                    response_models={'application/json': _get_response_model}
+                ),
+                MethodResponse(
+                    status_code='400'
+                )
+            ]
         )
 
         _create_resource.add_cors_preflight(

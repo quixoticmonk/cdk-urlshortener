@@ -48,7 +48,6 @@
          "gw_name": "urlshortenergw",
          "gw_stage_description": "Gateway stage for Url shortener service",
          "gw_description": "Gateway for url shortener",
-         "gw_passthrough_behavior": "WHEN_NO_TEMPLATES",
          "gw_method": "POST",
          "gw_origins_cors": "*",
          "gw_origins_cors_method": "POST"

@@ -15,3 +15,5 @@ class AppConstruct(cdk.Construct):
 
         _db.grant_read_write_data(_fn1)
         _db.grant_read_write_data(_fn2)
+
+        _fn1.grant_invoke

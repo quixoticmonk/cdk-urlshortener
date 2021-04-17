@@ -1,3 +1,4 @@
+import textwrap
 from aws_cdk import (
     core,
     aws_lambda as _lambda,
@@ -66,7 +67,7 @@ class GatewayConstruct(core.Construct):
             description=gw["gw_description"],
         )
 
-        _post_response_model = gateway.add_model(
+        _create_response_model = gateway.add_model(
             "CreateResponseModel",
             content_type="application/json",
             model_name="CreateResponseModel",
@@ -83,7 +84,7 @@ class GatewayConstruct(core.Construct):
             }
         )
 
-        _get_response_model = gateway.add_model(
+        _retrieve_response_model = gateway.add_model(
             "RetrieveResponseModel",
             model_name="RetrieveResponseModel",
             schema={
@@ -104,28 +105,83 @@ class GatewayConstruct(core.Construct):
 
         passthrough_behavior = PassthroughBehavior.WHEN_NO_TEMPLATES
 
-        lambda_integration = _api_gw.LambdaIntegration(
+        _create_response_template = textwrap.dedent(
+            """
+                    #set($inputRoot = $input.path('$'))
+                    {
+                             "short_id" : $inputRoot.short_id    
+                    }
+                    """
+        )
+
+        _retrieve_response_template = textwrap.dedent(
+            """
+                    #set($inputRoot = $input.path('$'))
+                    {
+                             "long_url" : $inputRoot.long_url     
+                    }
+                    """
+        )
+
+        _create_lambda_integ = _api_gw.LambdaIntegration(
             lambda_fn_alias,
             proxy=False,
             passthrough_behavior=passthrough_behavior,
+            integration_responses=[
+                _api_gw.IntegrationResponse(
+                    status_code="200",
+                    response_templates={
+                        "application/json": _create_response_template
+                    }
+                )
+            ],
+            request_templates={
+                "application/json": textwrap.dedent(
+                    """
+                    #set($inputRoot = $input.path('$'))
+                    {
+                        "body": {
+                            "long_url" : "$inputRoot.long_url"    
+                        }
+                    }
+                    """
+                )
+            }
         )
 
-        lambda_integration_2 = _api_gw.LambdaIntegration(
+        _retrieve_lambda_integ = _api_gw.LambdaIntegration(
             lambda_fn_alias2,
             proxy=False,
             passthrough_behavior=passthrough_behavior,
+            integration_responses=[
+                _api_gw.IntegrationResponse(
+                    status_code="200",
+                    response_templates={
+                        "application/json": _retrieve_response_template
+                    }
+                )
+            ],
+            request_templates={
+                "application/json": textwrap.dedent(
+                    """
+                    {
+                        "short_id": "$input.params('short_id')"
+                    }
+                    """
+                )
+            }
         )
 
         _create_resource = gateway.root.add_resource("create")
 
         _create_resource.add_method(
             "POST",
-            lambda_integration,
+            _create_lambda_integ,
             api_key_required=False,
             method_responses=[
                 MethodResponse(
                     status_code='200',
-                    response_models={'application/json': _post_response_model}
+                    response_models={'application/json': _create_response_model}
                 ),
                 MethodResponse(
                     status_code='400'
@@ -137,12 +193,12 @@ class GatewayConstruct(core.Construct):
 
         _retrieve_resource.add_method(
             "GET",
-            lambda_integration_2,
+            _retrieve_lambda_integ,
             api_key_required=False,
             method_responses=[
                 MethodResponse(
                     status_code='301',
-                    response_models={'application/json': _get_response_model}
+                    response_models={'application/json': _retrieve_response_model}
                 ),
                 MethodResponse(
                     status_code='400'

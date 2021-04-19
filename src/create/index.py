@@ -3,6 +3,11 @@ import json
 import boto3
 from string import ascii_uppercase, ascii_lowercase, digits
 from time import strftime, time
+from aws_xray_sdk_core import xray_recorder, patch_all
+
+logger = logging.getLogger()
+logger.setLeel(Logging.INFO)
+patch_all()
 
 domain_url = os.getenv('DOMAIN_URL')
 expiry_time = os.getenv("EXPIRY_TIME")

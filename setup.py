@@ -9,12 +9,11 @@ setuptools.setup(
     package_dir={"": "lib"},
     packages=setuptools.find_packages(where="lib"),
     install_requires=[
-        "aws-cdk.core==1.98.0",
-        "aws-cdk.core==1.98.0",
-        "aws-cdk.aws-dynamodb==1.98.0",
-        "aws-cdk.aws-apigateway==1.98.0",
-        "aws-cdk.aws-lambda==1.98.0",
-        "aws-cdk.aws-lambda-event-sources==1.98.0"
+        "aws-cdk.core==1.99.0",
+        "aws-cdk.aws-dynamodb==1.99.0",
+        "aws-cdk.aws-apigateway==1.99.0",
+        "aws-cdk.aws-lambda==1.99.0",
+        "aws-cdk.aws-lambda-event-sources==1.99.0"
     ],
 
 )

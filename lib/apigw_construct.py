@@ -3,7 +3,7 @@ from aws_cdk import (
     core,
     aws_lambda as _lambda,
     aws_apigateway as _api_gw,
-    aws_logs as _logs,
+    aws_logs as _logs
 )
 
 from aws_cdk.aws_apigateway import (MethodLoggingLevel, EndpointType,
@@ -21,6 +21,7 @@ class GatewayConstruct(core.Construct):
                  lambda_fn_alias: _lambda.IAlias, lambda_fn_alias2: _lambda.IAlias, gw_context: str,
                  **kwargs) -> None:
         super().__init__(scope, construct_id)
+
 
         _create_model_props = {
             "short_url": {
@@ -79,8 +80,8 @@ class GatewayConstruct(core.Construct):
                 )
             ]
         )
-
-        _retrieve_resource = gateway.root.add_resource("{short_id}")
+        _retrieve_resource_root = gateway.root.add_resource("t")
+        _retrieve_resource = _retrieve_resource_root.add_resource("{short_id}")
 
         _retrieve_resource.add_method(
             "GET",

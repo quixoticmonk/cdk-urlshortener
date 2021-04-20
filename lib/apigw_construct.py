@@ -92,7 +92,7 @@ class GatewayConstruct(core.Construct):
                     response_models={
                         'application/json': _retrieve_response_model},
                     response_parameters={
-                        'method.response.header.Location': "integration.response.body.location"
+                        'method.response.header.Location': True
                     }
                 ),
                 MethodResponse(

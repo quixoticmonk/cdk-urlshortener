@@ -1,10 +1,10 @@
 import os
 import boto3
-from aws_xray_sdk_core import xray_recorder, patch_all
-
-logger = logging.getLogger()
-logger.setLeel(Logging.INFO)
-patch_all()
+# from aws_xray_sdk_core import xray_recorder, patch_all
+#
+# logger = logging.getLogger()
+# logger.setLeel(Logging.INFO)
+# patch_all()
 
 table_name = os.getenv("TABLE_NAME")
 

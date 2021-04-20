@@ -28,7 +28,7 @@ class GatewayConstruct(core.Construct):
             }
         }
         _retrieve_model_props = {
-            "long_url": {
+            "location": {
                 "type": JsonSchemaType.STRING
             },
             "status_code": {
@@ -227,7 +227,7 @@ class GatewayConstruct(core.Construct):
             """
                 #set($inputRoot = $input.path('$'))
                 {
-                         "long_url" : $inputRoot.long_url     
+                         "location" : $inputRoot.location     
                 }
                 """
         )

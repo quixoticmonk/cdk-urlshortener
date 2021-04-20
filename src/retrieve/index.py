@@ -28,5 +28,5 @@ def handler(event, context):
 
     return {
         "statusCode": 301,
-        "location": "long_url"
+        "location": long_url
     }

@@ -47,6 +47,5 @@ def handler(event, context):
             'long_url': _long_url
         }
     )
-    _gateway_response = '{"short_id":"' + \
-        _short_url + '","long_url":"' + _long_url + '"}'
-    return {"statusCode": 200, "body": _gateway_response}
+
+    return {"statusCode": 200, "short_id": _short_url}

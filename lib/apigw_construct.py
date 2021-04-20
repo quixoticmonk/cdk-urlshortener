@@ -210,7 +210,7 @@ class GatewayConstruct(core.Construct):
     def _create_response_template():
         return textwrap.dedent(
             """
-                #set($inputRoot = $util.parseJson($input.body))
+                #set($inputRoot = $input.path('$'))
                 {
                          "short_id" : $inputRoot.short_id    
                 }

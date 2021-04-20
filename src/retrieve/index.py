@@ -17,6 +17,7 @@ def handler(event, context):
     try:
         item = ddb.get_item(Key={'short_id': short_id})
         long_url = item.get('Item').get('long_url')
+        print(long_url)
 
     except:
         return {

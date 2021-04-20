@@ -53,10 +53,14 @@ class GatewayConstruct(core.Construct):
 
         _create_lambda_integ = self._create_lambda_integration(lambda_fn_alias, _passthrough_behavior,
                                                                _create_response_template,
-                                                               _create_request_template)
+                                                               _create_request_template,
+                                                               "200"
+                                                               )
         _retrieve_lambda_integ = self._create_lambda_integration(lambda_fn_alias2, _passthrough_behavior,
                                                                  _retrieve_response_template,
-                                                                 _retrieve_request_template)
+                                                                 _retrieve_request_template,
+                                                                 "301"
+                                                                 )
 
         _create_resource = gateway.root.add_resource("create")
 
@@ -133,14 +137,14 @@ class GatewayConstruct(core.Construct):
             """
         )
 
-    def _create_lambda_integration(self, lambda_fn_alias, _passthrough_behavior, _response_template, _request_template):
+    def _create_lambda_integration(self, lambda_fn_alias, _passthrough_behavior, _response_template, _request_template, _status_code):
         return _api_gw.LambdaIntegration(
             lambda_fn_alias,
             proxy=False,
             passthrough_behavior=_passthrough_behavior,
             integration_responses=[
                 _api_gw.IntegrationResponse(
-                    status_code="200",
+                    status_code=_status_code,
                     response_templates={
                         "application/json": _response_template
                     }
@@ -212,7 +216,7 @@ class GatewayConstruct(core.Construct):
             """
                 #set($inputRoot = $input.path('$'))
                 {
-                         "short_id" : $inputRoot.short_id    
+                         "short_id" : "$inputRoot.short_id"    
                 }
                 """
         )

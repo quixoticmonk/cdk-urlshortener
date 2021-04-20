@@ -8,7 +8,7 @@ class AppConstruct(cdk.Construct):
         super().__init__(scope, construct_id)
 
         _fn1.add_environment("TABLE_NAME", _db.table_name)
-        _fn1.add_environment("DOMAIN_URL", "manu.c")
+        _fn1.add_environment("DOMAIN_URL", "manuchandrasekhar.com/")
         _fn1.add_environment("EXPIRY_TIME", "86400")
 
         _fn2.add_environment("TABLE_NAME",_db.table_name)

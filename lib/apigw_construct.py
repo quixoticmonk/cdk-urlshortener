@@ -90,7 +90,10 @@ class GatewayConstruct(core.Construct):
                 MethodResponse(
                     status_code='301',
                     response_models={
-                        'application/json': _retrieve_response_model}
+                        'application/json': _retrieve_response_model},
+                    response_parameters={
+                        'method.response.header.Location': "integration.response.body.location"
+                    }
                 ),
                 MethodResponse(
                     status_code='400'

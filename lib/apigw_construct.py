@@ -56,7 +56,7 @@ class GatewayConstruct(core.Construct):
                                                                _create_request_template,
                                                                "200"
                                                                )
-        _retrieve_lambda_integ = self._create_lambda_integration(lambda_fn_alias2, _passthrough_behavior,
+        _retrieve_lambda_integ = self._retrieve_lambda_integration(lambda_fn_alias2, _passthrough_behavior,
                                                                  _retrieve_response_template,
                                                                  _retrieve_request_template,
                                                                  "301"
@@ -150,6 +150,27 @@ class GatewayConstruct(core.Construct):
                     status_code=_status_code,
                     response_templates={
                         "application/json": _response_template
+                    }
+                )
+            ],
+            request_templates={
+                "application/json": _request_template
+            }
+        )
+
+    def _retrieve_lambda_integration(self, lambda_fn_alias, _passthrough_behavior, _response_template, _request_template, _status_code):
+        return _api_gw.LambdaIntegration(
+            lambda_fn_alias,
+            proxy=False,
+            passthrough_behavior=_passthrough_behavior,
+            integration_responses=[
+                _api_gw.IntegrationResponse(
+                    status_code=_status_code,
+                    response_templates={
+                        "application/json": _response_template
+                    },
+                    response_parameters={
+                        'method.response.header.Location': "integration.response.body.location"
                     }
                 )
             ],

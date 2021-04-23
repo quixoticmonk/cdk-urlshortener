@@ -3,3 +3,8 @@
 cdk.out
 lib/__pycache__
 __pycache__/
+node_modules
+.pytest_cache
+package-lock.json
+package.json
+lib/urlshortener.egg-info

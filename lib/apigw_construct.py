@@ -169,6 +169,9 @@ class GatewayConstruct(core.Construct):
             ],
             request_templates={
                 "application/json": _request_template
+            },
+            request_parameters={
+                'proxy': "method.request.path.proxy"
             }
         )
 

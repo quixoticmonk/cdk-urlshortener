@@ -92,10 +92,12 @@ class GatewayConstruct(core.Construct):
                     status_code='301',
                     response_parameters={
                         'method.response.header.Location': True,
-                        'proxy': True
-                    },
+                    }
                 )
-            ]
+            ],
+            request_parameters={
+                'method.request.path.proxy': True,
+            }
         )
 
         _create_resource.add_cors_preflight(
@@ -172,7 +174,7 @@ class GatewayConstruct(core.Construct):
                 "application/json": _request_template
             },
             request_parameters={
-                'proxy': "method.request.path.proxy"
+                'method.request.path.proxy': "method.request.path.proxy"
             }
         )
 

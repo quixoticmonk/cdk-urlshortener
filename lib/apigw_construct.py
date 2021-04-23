@@ -91,8 +91,9 @@ class GatewayConstruct(core.Construct):
                 MethodResponse(
                     status_code='301',
                     response_parameters={
-                        'method.response.header.Location': True
-                    }
+                        'method.response.header.Location': True,
+                        'proxy': True
+                    },
                 )
             ]
         )
